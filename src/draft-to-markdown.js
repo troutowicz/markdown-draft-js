@@ -191,6 +191,7 @@ function renderBlock(block, index, rawDraftObject, options) {
       customEntityItems = options.entityItems || {};
 
   var type = block.type;
+  var excludedCharacterIndices = [];
 
   // Render main block wrapping element
   if (customStyleItems[type] || StyleItems[type]) {
@@ -266,11 +267,21 @@ function renderBlock(block, index, rawDraftObject, options) {
         var entity = rawDraftObject.entityMap[range.key];
         if (customEntityItems[entity.type] || EntityItems[entity.type]) {
           markdownString += (customEntityItems[entity.type] || EntityItems[entity.type]).open(entity);
+
+          if (customEntityItems[entity.type] && customEntityItems[entity.type].text) {
+            for (let i = range.offset; i < range.offset + range.length; i++) {
+              excludedCharacterIndices.push(i);
+            }
+
+            markdownString += customEntityItems[entity.type].text(entity);
+          }
         }
       }
     });
 
-    markdownString += character;
+    if (!excludedCharacterIndices.includes(characterIndex)) {
+      markdownString += character;
+    }
   });
 
   // Close any remaining entity tags
