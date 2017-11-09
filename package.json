@@ -9,6 +9,7 @@
     "url": "https://github.com/Rosey/markdown-draft-js.git"
   },
   "main": "lib/index.js",
+  "module": "src/index.js",
   "scripts": {
     "build": "babel src --out-dir lib",
     "prepublish": "npm run build",
