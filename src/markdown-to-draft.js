@@ -92,6 +92,15 @@ function generateUniqueKey() {
   return idCounter;
 }
 
+function updateInlineChild(type, content, blockInlineChildren) {
+  const child = blockInlineChildren.find(b => b.type === type);
+
+  if (child) {
+    child.items.forEach(item => item.length = content.length - item.offset)
+    blockInlineChildren = blockInlineChildren.filter(b => b.type !== type);
+  }
+}
+
 /*
  * Handle inline content in a block level item
  * parses for BlockEntities (links, images) and BlockStyles (em, strong)
@@ -108,7 +117,7 @@ function generateUniqueKey() {
  *  blockStyleRanges: block-level representation of styles (eg strong, em)
 */
 function parseInline(inlineItem, BlockEntities, BlockStyles) {
-  var content = '', blockEntities = {}, blockEntityRanges = [], blockInlineStyleRanges = [];
+  var content = '', blockEntities = {}, blockEntityRanges = [], blockInlineChildren = [], blockInlineStyleRanges = [];
   inlineItem.children.forEach(function (child) {
     if (child.type === 'text') {
       content += child.content;
@@ -128,6 +137,7 @@ function parseInline(inlineItem, BlockEntities, BlockStyles) {
         content += child.content;
       }
 
+      blockInlineChildren.push({ type: child.type, items: [ styleBlock ] });
       blockInlineStyleRanges.push(styleBlock);
     } else if (BlockEntities[child.type]) {
       var key = generateUniqueKey();
@@ -142,7 +152,7 @@ function parseInline(inlineItem, BlockEntities, BlockStyles) {
     } else if (child.type.indexOf('_close') !== -1 && BlockEntities[child.type.replace('_close', '_open')]) {
       blockEntityRanges[blockEntityRanges.length - 1].length = content.length - blockEntityRanges[blockEntityRanges.length - 1].offset;
     } else if (child.type.indexOf('_close') !== -1 && BlockStyles[child.type.replace('_close', '_open')]) {
-      blockInlineStyleRanges[blockInlineStyleRanges.length - 1].length = content.length - blockInlineStyleRanges[blockInlineStyleRanges.length - 1].offset;
+      updateInlineChild(child.type.replace('_close', '_open'), content, blockInlineChildren);
     }
   });
 
