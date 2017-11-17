@@ -118,11 +118,11 @@ const StyleItems = {
 
   'ITALIC': {
     open: function () {
-      return '_';
+      return '*';
     },
 
     close: function () {
-      return '_';
+      return '*';
     }
   },
 
@@ -144,7 +144,17 @@ const StyleItems = {
     close: function () {
       return '`';
     }
-  }
+  },
+
+  'UNDERLINE': {
+    open: function () {
+      return '++';
+    },
+
+    close: function () {
+      return '++';
+    }
+  },
 };
 
 // A map of draftjs entity types -> markdown open and close characters
