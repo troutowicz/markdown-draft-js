@@ -148,11 +148,11 @@ const StyleItems = {
 
   'UNDERLINE': {
     open: function () {
-      return '++';
+      return '__';
     },
 
     close: function () {
-      return '++';
+      return '__';
     }
   },
 };

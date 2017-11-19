@@ -83,7 +83,7 @@ const DefaultBlockStyles = {
   strong_open: 'BOLD',
   em_open: 'ITALIC',
   code: 'CODE',
-  ins_open: 'UNDERLINE',
+  und_open: 'UNDERLINE',
 };
 
 // Key generator for entityMap items
@@ -177,8 +177,6 @@ function markdownToDraft(string, options = {}) {
       md.use(plugin, {});
     });
   }
-
-  md.inline.ruler.enable([ 'ins' ]);
 
   var blocks = []; // blocks will be returned as part of the final draftjs raw object
   var entityMap = {}; // entitymap will be returned as part of the final draftjs raw object
